@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root,[data-theme="light"]{
+      --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+      --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+      --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+      --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+      --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+      --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
+      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;
+      --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;
+      --color-text:#28251d;--color-text-muted:#6b6963;
+      --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-soft:#dcebea;
+      --color-success:#437a22;--color-warning:#d19900;--color-danger:#a13544;
+      --radius-md:.75rem;--radius-lg:1rem;--radius-xl:1.25rem;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.06);--shadow-md:0 10px 30px rgba(0,0,0,.08);
+      --font-display:'Instrument Serif', Georgia, serif;--font-body:'Inter', sans-serif;
+    }
+    [data-theme="dark"]{
+      --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-border:#393836;
+      --color-text:#ece9e2;--color-text-muted:#a7a39b;
+      --color-primary:#4f98a3;--color-primary-hover:#73aeb8;--color-primary-soft:#243336;
+      --color-success:#7fb35f;--color-warning:#e8af34;--color-danger:#dd6974;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.3);--shadow-md:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;background:var(--color-bg);color:var(--color-text)}
+    .container{width:min(1120px,calc(100% - 2rem));margin:0 auto}
+    .topbar{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--color-bg) 82%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border)}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;gap:var(--space-4)}
+    .brand{display:flex;align-items:center;gap:.9rem;text-decoration:none;color:inherit}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary-soft),transparent),var(--color-surface-2);display:grid;place-items:center;border:1px solid var(--color-border)}
+    .logo svg{width:24px;height:24px}
+    .brand-copy strong{display:block;font-size:var(--text-sm)}
+    .brand-copy span{display:block;font-size:var(--text-xs);color:var(--color-text-muted)}
+    .actions{display:flex;align-items:center;gap:.75rem}
+    .btn,.theme-toggle{border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);padding:.8rem 1rem;border-radius:999px;font-weight:600;cursor:pointer;transition:.18s ease}
+    .btn.primary{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+    .btn.primary:hover{background:var(--color-primary-hover)}
+    .theme-toggle{width:44px;height:44px;padding:0;display:grid;place-items:center}
+    .hero{padding:var(--space-12) 0 var(--space-10)}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--space-8);align-items:end}
+    h1{font-family:var(--font-display);font-size:var(--text-2xl);line-height:1.03;margin:0 0 var(--space-4)}
+    .lead{max-width:58ch;color:var(--color-text-muted);margin:0 0 var(--space-6)}
+    .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-top:var(--space-6)}
+    .stat{background:var(--color-surface);border:1px solid var(--color-border);padding:var(--space-4);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+    .stat small{display:block;color:var(--color-text-muted);font-size:var(--text-xs)}
+    .stat strong{display:block;font-size:var(--text-lg);margin-top:.2rem}
+    .panel{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-md)}
+    .panel h2,.section h2{font-size:var(--text-lg);margin:0 0 var(--space-4)}
+    .grid{display:grid;gap:var(--space-6)}
+    .grid-2{grid-template-columns:1fr 1fr}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .section{padding:var(--space-8) 0}
+    .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5)}
+    label{display:block;font-size:var(--text-sm);font-weight:600;margin-bottom:.45rem}
+    input,select,textarea{width:100%;padding:.85rem 1rem;border-radius:.9rem;border:1px solid var(--color-border);background:var(--color-surface-2);color:var(--color-text);font:inherit}
+    .field{margin-bottom:var(--space-4)}
+    .muted{color:var(--color-text-muted)}
+    .tiny{font-size:var(--text-xs);color:var(--color-text-muted)}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:.9rem .8rem;border-bottom:1px solid var(--color-border);font-size:var(--text-sm)}
+    th{color:var(--color-text-muted);font-weight:600}
+    .chips{display:flex;flex-wrap:wrap;gap:.5rem}
+    .chip{padding:.45rem .7rem;border-radius:999px;background:var(--color-primary-soft);color:var(--color-primary);font-size:var(--text-xs);font-weight:700}
+    .meter{height:12px;background:var(--color-surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--color-border)}
+    .meter > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--color-primary),#4f98a3)}
+    .footer{padding:var(--space-8) 0 var(--space-12);color:var(--color-text-muted);font-size:var(--text-sm)}
+    @media (max-width:920px){
+      .hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}
+      .hero-stats{grid-template-columns:1fr}
+      .topbar-inner{align-items:flex-start;flex-direction:column}
+      .actions{width:100%}
+    }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="#top">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 16c2.4-3.8 5.2-5.7 8.4-5.7 2.3 0 4.2.7 5.6 2.1"/>
+          <path d="M8 18h8"/>
+          <circle cx="18" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="brand-copy">
+        <strong>Progress Tracker</strong>
+        <span>Weight, waist, runs, and gym consistency</span>
+      </div>
+    </a>
+    <div class="actions">
+      <a class="btn" href="#dashboard">Dashboard</a>
+      <a class="btn primary" href="#log">Log update</a>
+      <button class="theme-toggle" data-theme-toggle aria-label="Switch theme">☾</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="chips">
+          <span class="chip">107 kg start</span>
+          <span class="chip">85 kg goal</span>
+          <span class="chip">May 2027 target</span>
+        </div>
+        <h1>Track your cut with one clean page.</h1>
+        <p class="lead">
+          Use this static site to record body weight, waist, steps, runs, gym sessions, calories, and notes.
+          Everything saves in your browser for quick progress checks on desktop or mobile.
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <small>Current weight</small>
+            <strong id="currentWeight">107.0 kg</strong>
+          </div>
+          <div class="stat">
+            <small>Goal weight</small>
+            <strong>85.0 kg</strong>
+          </div>
+          <div class="stat">
+            <small>Weight to lose</small>
+            <strong id="remainingWeight">22.0 kg</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>10-month focus</h2>
+        <div class="field">
+          <label>Goal progress</label>
+          <div class="meter"><span id="goalBar"></span></div>
+          <div class="tiny" id="goalText">0% complete</div>
+        </div>
+        <div class="field">
+          <label>Weekly priorities</label>
+          <div class="chips">
+            <span class="chip">Morning runs</span>
+            <span class="chip">4 strength sessions</span>
+            <span class="chip">High protein</span>
+            <span class="chip">Measured portions</span>
+          </div>
+        </div>
+        <p class="muted">
+          Best used as a lightweight front end. Later, you can connect it to Google Sheets, Supabase,
+          or Cloudflare D1 if you want real cloud data storage.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="dashboard">
+    <div class="container grid grid-3">
+      <div class="card">
+        <h2>Body</h2>
+        <p class="tiny">Current metrics</p>
+        <p><strong>Current weight:</strong> <span id="dashWeight">107.0 kg</span></p>
+        <p><strong>Waist:</strong> <span id="dashWaist">—</span></p>
+        <p><strong>Latest update:</strong> <span id="dashDate">—</span></p>
+      </div>
+      <div class="card">
+        <h2>Training</h2>
+        <p class="tiny">This week</p>
+        <p><strong>Runs:</strong> <span id="dashRuns">0</span></p>
+        <p><strong>Lifts:</strong> <span id="dashLifts">0</span></p>
+        <p><strong>Steps avg:</strong> <span id="dashSteps">0</span></p>
+      </div>
+      <div class="card">
+        <h2>Nutrition</h2>
+        <p class="tiny">Current targets</p>
+        <p><strong>Calories:</strong> 2,500 kcal</p>
+        <p><strong>Protein:</strong> 200-220 g</p>
+        <p><strong>Plan:</strong> Tue/Sat vegetarian</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="log">
+    <div class="container grid grid-2">
+      <div class="panel">
+        <h2>Log today</h2>
+        <form id="logForm">
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" type="date" required>
+          </div>
+          <div class="field">
+            <label for="weight">Current weight (kg)</label>
+            <input id="weight" type="number" step="0.1" placeholder="e.g. 105.8">
+          </div>
+          <div class="field">
+            <label for="waist">Waist (cm)</label>
+            <input id="waist" type="number" step="0.1" placeholder="e.g. 101">
+          </div>
+          <div class="field">
+            <label for="steps">Steps</label>
+            <input id="steps" type="number" placeholder="e.g. 9500">
+          </div>
+          <div class="field">
+            <label>Workout completed</label>
+            <div style="display:grid;gap:.75rem">
+              <label style="display:flex;align-items:center;gap:.7rem;font-weight:500;margin:0">
+                <input id="run" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Run completed
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;font-weight:500;margin:0">
+                <input id="lift" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Lift completed
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="notes">Notes</label>
+            <textarea id="notes" rows="4" placeholder="Sleep, hunger, training performance, cravings, recovery..."></textarea>
+          </div>
+          <button class="btn primary" type="submit">Save entry</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>How this version works</h2>
+        <p class="muted">
+          This is a static Cloudflare-ready site. It uses browser storage so you can start immediately without a backend.
+        </p>
+        <ul>
+          <li>Fast to deploy as a single HTML file.</li>
+          <li>Easy to edit later with charts, photos, and milestone sections.</li>
+          <li>Good first version for Cloudflare Pages.</li>
+        </ul>
+        <p class="tiny">
+          If you open the site on a different browser or device, saved entries will not sync unless you later add a real database.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container panel table-wrap">
+      <h2>Recent entries</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Current weight</th>
+            <th>Waist</th>
+            <th>Steps</th>
+            <th>Run done</th>
+            <th>Lift done</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="entriesBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    Built as a basic static progress site for Cloudflare Pages. Start here, then grow it into a richer dashboard later.
+  </div>
+</footer>
+
+<script>
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  const root = document.documentElement;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  root.setAttribute('data-theme', theme);
+  themeToggle.textContent = theme === 'dark' ? '☀' : '☾';
+  themeToggle.addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀' : '☾';
+  });
+
+  const STORAGE_KEY = 'progress-tracker-entries';
+  const GOAL_WEIGHT = 85;
+  const START_WEIGHT = 107;
+  const dateInput = document.getElementById('date');
+  dateInput.value = new Date().toISOString().slice(0,10);
+
+  const loadEntries = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+  };
+  const saveEntries = (entries) => localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+
+  function render() {
+    const entries = loadEntries().sort((a,b) => b.date.localeCompare(a.date));
+    const body = document.getElementById('entriesBody');
+    body.innerHTML = '';
+    entries.slice(0, 12).forEach(entry => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${entry.date}</td>
+        <td>${entry.weight || '—'}</td>
+        <td>${entry.waist || '—'}</td>
+        <td>${entry.steps || '—'}</td>
+        <td>${entry.run ? 'Yes' : 'No'}</td>
+        <td>${entry.lift ? 'Yes' : 'No'}</td>
+        <td>${entry.notes || '—'}</td>`;
+      body.appendChild(tr);
+    });
+
+    const latest = entries[0] || {};
+    const currentWeight = parseFloat(latest.weight || START_WEIGHT);
+    const remaining = Math.max(0, currentWeight - GOAL_WEIGHT);
+    const progress = Math.max(0, Math.min(100, ((START_WEIGHT - currentWeight) / (START_WEIGHT - GOAL_WEIGHT)) * 100));
+    const runs = entries.filter(e => e.run).length;
+    const lifts = entries.filter(e => e.lift).length;
+    const stepValues = entries.map(e => parseInt(e.steps, 10)).filter(Number.isFinite);
+    const avgSteps = stepValues.length ? Math.round(stepValues.reduce((a,b)=>a+b,0) / stepValues.length) : 0;
+
+    document.getElementById('currentWeight').textContent = `${currentWeight.toFixed(1)} kg`;
+    document.getElementById('remainingWeight').textContent = `${remaining.toFixed(1)} kg`;
+    document.getElementById('dashWeight').textContent = `${currentWeight.toFixed(1)} kg`;
+    document.getElementById('dashWaist').textContent = latest.waist ? `${latest.waist} cm` : '—';
+    document.getElementById('dashDate').textContent = latest.date || '—';
+    document.getElementById('dashRuns').textContent = runs;
+    document.getElementById('dashLifts').textContent = lifts;
+    document.getElementById('dashSteps').textContent = avgSteps ? avgSteps.toLocaleString() : '0';
+    document.getElementById('goalBar').style.width = `${progress}%`;
+    document.getElementById('goalText').textContent = `${progress.toFixed(1)}% complete`;
+  }
+
+  document.getElementById('logForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const entry = {
+      date: document.getElementById('date').value,
+      weight: document.getElementById('weight').value,
+      waist: document.getElementById('waist').value,
+      steps: document.getElementById('steps').value,
+      run: document.getElementById('run').checked,
+      lift: document.getElementById('lift').checked,
+      notes: document.getElementById('notes').value.trim()
+    };
+    const entries = loadEntries().filter(item => item.date !== entry.date);
+    entries.push(entry);
+    saveEntries(entries);
+    e.target.reset();
+    dateInput.value = new Date().toISOString().slice(0,10);
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
