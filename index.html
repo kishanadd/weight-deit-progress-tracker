@@ -16,7 +16,8 @@
       --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
       --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
       --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;
-      --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#6b6963;
+      --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;
+      --color-text:#28251d;--color-text-muted:#6b6963;
       --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-soft:#dcebea;
       --color-success:#437a22;--color-warning:#d19900;--color-danger:#a13544;
       --radius-md:.75rem;--radius-lg:1rem;--radius-xl:1.25rem;
@@ -59,6 +60,7 @@
     .grid{display:grid;gap:var(--space-6)}
     .grid-2{grid-template-columns:1fr 1fr}
     .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
     .section{padding:var(--space-8) 0}
     .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5)}
     label{display:block;font-size:var(--text-sm);font-weight:600;margin-bottom:.45rem}
@@ -76,7 +78,7 @@
     .meter > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--color-primary),#4f98a3)}
     .footer{padding:var(--space-8) 0 var(--space-12);color:var(--color-text-muted);font-size:var(--text-sm)}
     @media (max-width:920px){
-      .hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}
+      .hero-grid,.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
       .hero-stats{grid-template-columns:1fr}
       .topbar-inner{align-items:flex-start;flex-direction:column}
       .actions{width:100%}
@@ -96,7 +98,7 @@
       </div>
       <div class="brand-copy">
         <strong>Progress Tracker</strong>
-        <span>Weight, waist, runs, and gym consistency</span>
+        <span>Weight, waist, runs, gym, supplements, meals</span>
       </div>
     </a>
     <div class="actions">
@@ -118,7 +120,7 @@
         </div>
         <h1>Track your cut with one clean page.</h1>
         <p class="lead">
-          Use this static site to record body weight, waist, steps, runs, gym sessions, calories, and notes.
+          Use this static site to record body weight, waist, steps, runs, lifts, supplements, meals and notes.
           Everything saves in your browser for quick progress checks on desktop or mobile.
         </p>
         <div class="hero-stats">
@@ -149,7 +151,8 @@
             <span class="chip">Morning runs</span>
             <span class="chip">4 strength sessions</span>
             <span class="chip">High protein</span>
-            <span class="chip">Measured portions</span>
+            <span class="chip">Supplements compliance</span>
+            <span class="chip">Meals as planned</span>
           </div>
         </div>
         <p class="muted">
@@ -160,8 +163,9 @@
     </div>
   </section>
 
+  <!-- DASHBOARD WITH NEW WIDGET -->
   <section class="section" id="dashboard">
-    <div class="container grid grid-3">
+    <div class="container grid grid-4">
       <div class="card">
         <h2>Body</h2>
         <p class="tiny">Current metrics</p>
@@ -169,6 +173,7 @@
         <p><strong>Waist:</strong> <span id="dashWaist">—</span></p>
         <p><strong>Latest update:</strong> <span id="dashDate">—</span></p>
       </div>
+
       <div class="card">
         <h2>Training</h2>
         <p class="tiny">This week</p>
@@ -176,6 +181,7 @@
         <p><strong>Lifts:</strong> <span id="dashLifts">0</span></p>
         <p><strong>Steps avg:</strong> <span id="dashSteps">0</span></p>
       </div>
+
       <div class="card">
         <h2>Nutrition</h2>
         <p class="tiny">Current targets</p>
@@ -183,9 +189,18 @@
         <p><strong>Protein:</strong> 200-220 g</p>
         <p><strong>Plan:</strong> Tue/Sat vegetarian</p>
       </div>
+
+      <div class="card">
+        <h2>Supplements & meals</h2>
+        <p class="tiny">Today’s completion</p>
+        <p><strong>Supplements done:</strong> <span id="dashSuppDone">0/3</span></p>
+        <p><strong>Meals done:</strong> <span id="dashMealsDone">0/5</span></p>
+        <p><strong>Daily score:</strong> <span id="dashDailyScore">0%</span></p>
+      </div>
     </div>
   </section>
 
+  <!-- LOG FORM WITH SUPPS + MEALS -->
   <section class="section" id="log">
     <div class="container grid grid-2">
       <div class="panel">
@@ -195,18 +210,22 @@
             <label for="date">Date</label>
             <input id="date" type="date" required>
           </div>
+
           <div class="field">
             <label for="weight">Current weight (kg)</label>
             <input id="weight" type="number" step="0.1" placeholder="e.g. 105.8">
           </div>
+
           <div class="field">
             <label for="waist">Waist (cm)</label>
             <input id="waist" type="number" step="0.1" placeholder="e.g. 101">
           </div>
+
           <div class="field">
             <label for="steps">Steps</label>
             <input id="steps" type="number" placeholder="e.g. 9500">
           </div>
+
           <div class="field">
             <label>Workout completed</label>
             <div style="display:grid;gap:.75rem">
@@ -220,13 +239,63 @@
               </label>
             </div>
           </div>
+
+          <div class="field">
+            <label>Supplements taken (morning)</label>
+            <div style="display:grid;gap:.5rem">
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="suppDut" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Dutasteride 0.5 mg
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="suppBiotin" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Biotin / Keratin
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="suppABC" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                ABC-Z / B-Complex (per day schedule)
+              </label>
+            </div>
+            <p class="tiny">
+              Mon/Wed/Fri/Sun: ABC-Z · Tue/Thu/Sat: B-Complex (from your tablet plan) [file:223].
+            </p>
+          </div>
+
+          <div class="field">
+            <label>Meals completed (agreed plan)</label>
+            <div style="display:grid;gap:.5rem">
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="meal1" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Meal 1 (Greek yogurt + oats + berries + whey)
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="mealLunch" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Lunch (protein + rice/potatoes + vegetables + avocado)
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="mealSnack" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Snack (whey + fruit)
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="mealDinner" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Dinner (fish/chicken/tofu + potatoes + salad + avocado)
+              </label>
+              <label style="display:flex;align-items:center;gap:.7rem;margin:0">
+                <input id="mealOpt" type="checkbox" style="width:18px;height:18px;accent-color:var(--color-primary)">
+                Optional snack (paneer/skyr/eggs)
+              </label>
+            </div>
+          </div>
+
           <div class="field">
             <label for="notes">Notes</label>
             <textarea id="notes" rows="4" placeholder="Sleep, hunger, training performance, cravings, recovery..."></textarea>
           </div>
+
           <button class="btn primary" type="submit">Save entry</button>
         </form>
       </div>
+
       <div class="panel">
         <h2>How this version works</h2>
         <p class="muted">
@@ -234,7 +303,7 @@
         </p>
         <ul>
           <li>Fast to deploy as a single HTML file.</li>
-          <li>Easy to edit later with charts, photos, and milestone sections.</li>
+          <li>Tracks workouts, tablets, and meals in one place.</li>
           <li>Good first version for Cloudflare Pages.</li>
         </ul>
         <p class="tiny">
@@ -244,6 +313,7 @@
     </div>
   </section>
 
+  <!-- RECENT ENTRIES TABLE -->
   <section class="section">
     <div class="container panel table-wrap">
       <h2>Recent entries</h2>
@@ -254,8 +324,10 @@
             <th>Current weight</th>
             <th>Waist</th>
             <th>Steps</th>
-            <th>Run done</th>
-            <th>Lift done</th>
+            <th>Run</th>
+            <th>Lift</th>
+            <th>Supps</th>
+            <th>Meals</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -299,6 +371,9 @@
     const body = document.getElementById('entriesBody');
     body.innerHTML = '';
     entries.slice(0, 12).forEach(entry => {
+      const suppCount = [entry.suppDut, entry.suppBiotin, entry.suppABC].filter(Boolean).length;
+      const mealCount = [entry.meal1, entry.mealLunch, entry.mealSnack, entry.mealDinner, entry.mealOpt].filter(Boolean).length;
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${entry.date}</td>
@@ -307,6 +382,8 @@
         <td>${entry.steps || '—'}</td>
         <td>${entry.run ? 'Yes' : 'No'}</td>
         <td>${entry.lift ? 'Yes' : 'No'}</td>
+        <td>${suppCount}/3</td>
+        <td>${mealCount}/5</td>
         <td>${entry.notes || '—'}</td>`;
       body.appendChild(tr);
     });
@@ -320,6 +397,12 @@
     const stepValues = entries.map(e => parseInt(e.steps, 10)).filter(Number.isFinite);
     const avgSteps = stepValues.length ? Math.round(stepValues.reduce((a,b)=>a+b,0) / stepValues.length) : 0;
 
+    const latestSupps = [latest.suppDut, latest.suppBiotin, latest.suppABC].filter(Boolean).length;
+    const latestMeals = [latest.meal1, latest.mealLunch, latest.mealSnack, latest.mealDinner, latest.mealOpt].filter(Boolean).length;
+    const totalHabits = 3 + 5 + 2; // 3 supplements, 5 meals, 2 workouts
+    const doneHabits = latestSupps + latestMeals + (latest.run ? 1 : 0) + (latest.lift ? 1 : 0);
+    const dailyScore = totalHabits ? Math.round((doneHabits / totalHabits) * 100) : 0;
+
     document.getElementById('currentWeight').textContent = `${currentWeight.toFixed(1)} kg`;
     document.getElementById('remainingWeight').textContent = `${remaining.toFixed(1)} kg`;
     document.getElementById('dashWeight').textContent = `${currentWeight.toFixed(1)} kg`;
@@ -330,6 +413,10 @@
     document.getElementById('dashSteps').textContent = avgSteps ? avgSteps.toLocaleString() : '0';
     document.getElementById('goalBar').style.width = `${progress}%`;
     document.getElementById('goalText').textContent = `${progress.toFixed(1)}% complete`;
+
+    document.getElementById('dashSuppDone').textContent = `${latestSupps}/3`;
+    document.getElementById('dashMealsDone').textContent = `${latestMeals}/5`;
+    document.getElementById('dashDailyScore').textContent = `${dailyScore}%`;
   }
 
   document.getElementById('logForm').addEventListener('submit', (e) => {
@@ -341,6 +428,14 @@
       steps: document.getElementById('steps').value,
       run: document.getElementById('run').checked,
       lift: document.getElementById('lift').checked,
+      suppDut: document.getElementById('suppDut').checked,
+      suppBiotin: document.getElementById('suppBiotin').checked,
+      suppABC: document.getElementById('suppABC').checked,
+      meal1: document.getElementById('meal1').checked,
+      mealLunch: document.getElementById('mealLunch').checked,
+      mealSnack: document.getElementById('mealSnack').checked,
+      mealDinner: document.getElementById('mealDinner').checked,
+      mealOpt: document.getElementById('mealOpt').checked,
       notes: document.getElementById('notes').value.trim()
     };
     const entries = loadEntries().filter(item => item.date !== entry.date);
