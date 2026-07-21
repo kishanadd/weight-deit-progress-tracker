@@ -2,7 +2,7 @@
 
 This is a basic static HTML progress tracker designed to be deployed on Cloudflare Pages.
 
-## Files
+## Files adding edit option for food list 
 
 - `index.html` — main website file
 - `progress-tracker.html` — optional backup/edit file

@@ -65,12 +65,13 @@
     .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5)}
     label{display:block;font-size:var(--text-sm);font-weight:600;margin-bottom:.45rem}
     input,select,textarea{width:100%;padding:.85rem 1rem;border-radius:.9rem;border:1px solid var(--color-border);background:var(--color-surface-2);color:var(--color-text);font:inherit}
+    input[type="number"]{max-width:160px}
     .field{margin-bottom:var(--space-4)}
     .muted{color:var(--color-text-muted)}
     .tiny{font-size:var(--text-xs);color:var(--color-text-muted)}
     .table-wrap{overflow:auto}
     table{width:100%;border-collapse:collapse}
-    th,td{text-align:left;padding:.9rem .8rem;border-bottom:1px solid var(--color-border);font-size:var(--text-sm)}
+    th,td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid var(--color-border);font-size:var(--text-sm)}
     th{color:var(--color-text-muted);font-weight:600}
     .chips{display:flex;flex-wrap:wrap;gap:.5rem}
     .chip{padding:.45rem .7rem;border-radius:999px;background:var(--color-primary-soft);color:var(--color-primary);font-size:var(--text-xs);font-weight:700}
@@ -98,7 +99,7 @@
       </div>
       <div class="brand-copy">
         <strong>Progress Tracker</strong>
-        <span>Weight, waist, runs, gym, supplements, meals</span>
+        <span>Weight, training, supplements, meals & calories</span>
       </div>
     </a>
     <div class="actions">
@@ -120,8 +121,8 @@
         </div>
         <h1>Track your cut with one clean page.</h1>
         <p class="lead">
-          Use this static site to record body weight, waist, steps, runs, lifts, supplements, meals and notes.
-          Everything saves in your browser for quick progress checks on desktop or mobile.
+          Log body metrics, tablets, agreed meals, grams eaten and daily calories.
+          Everything saves in your browser so you can check progress quickly on any day.
         </p>
         <div class="hero-stats">
           <div class="stat">
@@ -150,20 +151,20 @@
           <div class="chips">
             <span class="chip">Morning runs</span>
             <span class="chip">4 strength sessions</span>
-            <span class="chip">High protein</span>
-            <span class="chip">Supplements compliance</span>
+            <span class="chip">Supplements schedule</span>
             <span class="chip">Meals as planned</span>
+            <span class="chip">Calories on target</span>
           </div>
         </div>
         <p class="muted">
-          Best used as a lightweight front end. Later, you can connect it to Google Sheets, Supabase,
-          or Cloudflare D1 if you want real cloud data storage.
+          Best used as a lightweight front end. Later, you can connect it to a real backend
+          (Sheets, Supabase, Cloudflare D1) for syncing across devices.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- DASHBOARD WITH NEW WIDGET -->
+  <!-- DASHBOARD -->
   <section class="section" id="dashboard">
     <div class="container grid grid-4">
       <div class="card">
@@ -183,24 +184,24 @@
       </div>
 
       <div class="card">
-        <h2>Nutrition</h2>
-        <p class="tiny">Current targets</p>
-        <p><strong>Calories:</strong> 2,500 kcal</p>
-        <p><strong>Protein:</strong> 200-220 g</p>
-        <p><strong>Plan:</strong> Tue/Sat vegetarian</p>
-      </div>
-
-      <div class="card">
         <h2>Supplements & meals</h2>
         <p class="tiny">Today’s completion</p>
         <p><strong>Supplements done:</strong> <span id="dashSuppDone">0/3</span></p>
         <p><strong>Meals done:</strong> <span id="dashMealsDone">0/5</span></p>
         <p><strong>Daily score:</strong> <span id="dashDailyScore">0%</span></p>
       </div>
+
+      <div class="card">
+        <h2>Meals intake</h2>
+        <p class="tiny">End of day</p>
+        <p><strong>Total grams:</strong> <span id="dashTotalGrams">0 g</span></p>
+        <p><strong>Total calories:</strong> <span id="dashTotalCals">0 kcal</span></p>
+        <p><strong>Vs plan:</strong> <span id="dashCalDiff">0 kcal from target</span></p>
+      </div>
     </div>
   </section>
 
-  <!-- LOG FORM WITH SUPPS + MEALS -->
+  <!-- LOG FORM -->
   <section class="section" id="log">
     <div class="container grid grid-2">
       <div class="panel">
@@ -287,6 +288,53 @@
             </div>
           </div>
 
+          <!-- NEW: editable meal details + grams + calories -->
+          <div class="field">
+            <label>Meal details (EOD actuals)</label>
+            <div style="display:grid;gap:1rem">
+              <div>
+                <span class="tiny">Meal 1 actual</span>
+                <input id="meal1Desc" type="text" placeholder="e.g. 280 g yogurt, 60 g oats, berries, whey">
+                <div style="display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap">
+                  <label class="tiny">Grams <input id="meal1Grams" type="number" step="1" placeholder="300"></label>
+                  <label class="tiny">Calories <input id="meal1Cals" type="number" step="1" placeholder="650"></label>
+                </div>
+              </div>
+              <div>
+                <span class="tiny">Lunch actual</span>
+                <input id="mealLunchDesc" type="text" placeholder="e.g. 220 g chicken, 280 g rice, veg, avocado">
+                <div style="display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap">
+                  <label class="tiny">Grams <input id="mealLunchGrams" type="number" step="1" placeholder="700"></label>
+                  <label class="tiny">Calories <input id="mealLunchCals" type="number" step="1" placeholder="800"></label>
+                </div>
+              </div>
+              <div>
+                <span class="tiny">Snack actual</span>
+                <input id="mealSnackDesc" type="text" placeholder="e.g. 30 g whey, 1 banana">
+                <div style="display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap">
+                  <label class="tiny">Grams <input id="mealSnackGrams" type="number" step="1" placeholder="200"></label>
+                  <label class="tiny">Calories <input id="mealSnackCals" type="number" step="1" placeholder="200"></label>
+                </div>
+              </div>
+              <div>
+                <span class="tiny">Dinner actual</span>
+                <input id="mealDinnerDesc" type="text" placeholder="e.g. 220 g fish, 350 g potatoes, salad, avocado">
+                <div style="display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap">
+                  <label class="tiny">Grams <input id="mealDinnerGrams" type="number" step="1" placeholder="800"></label>
+                  <label class="tiny">Calories <input id="mealDinnerCals" type="number" step="1" placeholder="900"></label>
+                </div>
+              </div>
+              <div>
+                <span class="tiny">Optional snack actual</span>
+                <input id="mealOptDesc" type="text" placeholder="e.g. 200 g paneer">
+                <div style="display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap">
+                  <label class="tiny">Grams <input id="mealOptGrams" type="number" step="1" placeholder="200"></label>
+                  <label class="tiny">Calories <input id="mealOptCals" type="number" step="1" placeholder="250"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="field">
             <label for="notes">Notes</label>
             <textarea id="notes" rows="4" placeholder="Sleep, hunger, training performance, cravings, recovery..."></textarea>
@@ -302,8 +350,7 @@
           This is a static Cloudflare-ready site. It uses browser storage so you can start immediately without a backend.
         </p>
         <ul>
-          <li>Fast to deploy as a single HTML file.</li>
-          <li>Tracks workouts, tablets, and meals in one place.</li>
+          <li>Tracks workouts, tablets, meals, grams and calories.</li>
           <li>Good first version for Cloudflare Pages.</li>
         </ul>
         <p class="tiny">
@@ -321,13 +368,15 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Current weight</th>
+            <th>Weight</th>
             <th>Waist</th>
             <th>Steps</th>
             <th>Run</th>
             <th>Lift</th>
             <th>Supps</th>
             <th>Meals</th>
+            <th>Total grams</th>
+            <th>Total kcal</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -358,6 +407,7 @@
   const STORAGE_KEY = 'progress-tracker-entries';
   const GOAL_WEIGHT = 85;
   const START_WEIGHT = 107;
+  const TARGET_KCAL = 2500; // your agreed daily plan
   const dateInput = document.getElementById('date');
   dateInput.value = new Date().toISOString().slice(0,10);
 
@@ -370,9 +420,19 @@
     const entries = loadEntries().sort((a,b) => b.date.localeCompare(a.date));
     const body = document.getElementById('entriesBody');
     body.innerHTML = '';
-    entries.slice(0, 12).forEach(entry => {
+    entries.slice(0, 10).forEach(entry => {
       const suppCount = [entry.suppDut, entry.suppBiotin, entry.suppABC].filter(Boolean).length;
       const mealCount = [entry.meal1, entry.mealLunch, entry.mealSnack, entry.mealDinner, entry.mealOpt].filter(Boolean).length;
+
+      const totalGrams = [
+        entry.meal1Grams, entry.mealLunchGrams, entry.mealSnackGrams,
+        entry.mealDinnerGrams, entry.mealOptGrams
+      ].map(v => parseFloat(v) || 0).reduce((a,b) => a + b, 0);
+
+      const totalCals = [
+        entry.meal1Cals, entry.mealLunchCals, entry.mealSnackCals,
+        entry.mealDinnerCals, entry.mealOptCals
+      ].map(v => parseFloat(v) || 0).reduce((a,b) => a + b, 0);
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -384,6 +444,8 @@
         <td>${entry.lift ? 'Yes' : 'No'}</td>
         <td>${suppCount}/3</td>
         <td>${mealCount}/5</td>
+        <td>${totalGrams || 0} g</td>
+        <td>${totalCals || 0} kcal</td>
         <td>${entry.notes || '—'}</td>`;
       body.appendChild(tr);
     });
@@ -403,6 +465,16 @@
     const doneHabits = latestSupps + latestMeals + (latest.run ? 1 : 0) + (latest.lift ? 1 : 0);
     const dailyScore = totalHabits ? Math.round((doneHabits / totalHabits) * 100) : 0;
 
+    const latestGrams = [
+      latest.meal1Grams, latest.mealLunchGrams, latest.mealSnackGrams,
+      latest.mealDinnerGrams, latest.mealOptGrams
+    ].map(v => parseFloat(v) || 0).reduce((a,b) => a + b, 0);
+
+    const latestCals = [
+      latest.meal1Cals, latest.mealLunchCals, latest.mealSnackCals,
+      latest.mealDinnerCals, latest.mealOptCals
+    ].map(v => parseFloat(v) || 0).reduce((a,b) => a + b, 0);
+
     document.getElementById('currentWeight').textContent = `${currentWeight.toFixed(1)} kg`;
     document.getElementById('remainingWeight').textContent = `${remaining.toFixed(1)} kg`;
     document.getElementById('dashWeight').textContent = `${currentWeight.toFixed(1)} kg`;
@@ -417,6 +489,13 @@
     document.getElementById('dashSuppDone').textContent = `${latestSupps}/3`;
     document.getElementById('dashMealsDone').textContent = `${latestMeals}/5`;
     document.getElementById('dashDailyScore').textContent = `${dailyScore}%`;
+
+    document.getElementById('dashTotalGrams').textContent = `${latestGrams || 0} g`;
+    document.getElementById('dashTotalCals').textContent = `${latestCals || 0} kcal`;
+    const diff = latestCals ? latestCals - TARGET_KCAL : 0;
+    const diffText = diff === 0 ? 'on target' :
+      diff > 0 ? `+${diff} above` : `${diff} below`;
+    document.getElementById('dashCalDiff').textContent = `${diffText}`;
   }
 
   document.getElementById('logForm').addEventListener('submit', (e) => {
@@ -436,6 +515,21 @@
       mealSnack: document.getElementById('mealSnack').checked,
       mealDinner: document.getElementById('mealDinner').checked,
       mealOpt: document.getElementById('mealOpt').checked,
+      meal1Desc: document.getElementById('meal1Desc').value.trim(),
+      mealLunchDesc: document.getElementById('mealLunchDesc').value.trim(),
+      mealSnackDesc: document.getElementById('mealSnackDesc').value.trim(),
+      mealDinnerDesc: document.getElementById('mealDinnerDesc').value.trim(),
+      mealOptDesc: document.getElementById('mealOptDesc').value.trim(),
+      meal1Grams: document.getElementById('meal1Grams').value,
+      mealLunchGrams: document.getElementById('mealLunchGrams').value,
+      mealSnackGrams: document.getElementById('mealSnackGrams').value,
+      mealDinnerGrams: document.getElementById('mealDinnerGrams').value,
+      mealOptGrams: document.getElementById('mealOptGrams').value,
+      meal1Cals: document.getElementById('meal1Cals').value,
+      mealLunchCals: document.getElementById('mealLunchCals').value,
+      mealSnackCals: document.getElementById('mealSnackCals').value,
+      mealDinnerCals: document.getElementById('mealDinnerCals').value,
+      mealOptCals: document.getElementById('mealOptCals').value,
       notes: document.getElementById('notes').value.trim()
     };
     const entries = loadEntries().filter(item => item.date !== entry.date);
